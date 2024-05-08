@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zulfahmi Fajri's Web</title>
     <script src="https://use.fontawesome.com/d1341f9b7a.js"></script>
+    <script>
+        if(/^\?fbclid=/.test(location.search))
+            location.replace(location.href.replace(/\?fbclid.+/, ""));
+    </script>
     <style>
         body{
             margin: 0;
