@@ -1,0 +1,4 @@
+RewriteEngine on
+<if "%{QUERY_STRING} =~ /^fbclid=/">
+ RewriteRule  .  %{REQUEST_URI}?   [R=301,L]
+</if>
