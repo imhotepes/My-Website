@@ -1,2 +1,2 @@
 # My-Website
-connect to https://zulfah.me
+connect with https://zulfah.me
