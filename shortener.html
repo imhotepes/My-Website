@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>URL Shortener - YOLO Edition</title>
+</head>
+<body>
+    <h1>URL Shortener 🚀</h1>
+    <form id="shortenForm">
+        <label for="longUrl">Masukkan URL Panjang:</label>
+        <input type="url" id="longUrl" required>
+        <button type="submit">Perpendek URL</button>
+    </form>
+
+    <h2>URL yang Disingkat:</h2>
+    <div id="shortenedUrl"></div>
+
+    <script>
+        const links = {};
+
+        document.getElementById('shortenForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const longUrl = document.getElementById('longUrl').value;
+            const shortCode = Math.random().toString(36).substring(2, 6);
+
+            links[shortCode] = longUrl;
+            const shortUrl = `${window.location.origin}/shortener.html?code=${shortCode}`;
+
+            document.getElementById('shortenedUrl').innerHTML = `
+                <p><a href="${shortUrl}" target="_blank">${shortUrl}</a></p>
+            `;
+
+            console.log("Links:", links);
+        });
+
+        // Redirect jika di /shortener.html?code=abcd
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code');
+        if (code && links[code]) {
+            window.location.href = links[code];
+        } else if (code) {
+            document.body.innerHTML = '<h1>404: Link Tidak Ditemukan</h1>';
+        }
+    </script>
+</body>
+</html>
