@@ -3,56 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=1024, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zulfahmi Fajri's Web</title>
     <script src="https://use.fontawesome.com/d1341f9b7a.js"></script>
     <script>
-        // Hapus fbclid jika ada di URL
-        if (/\?fbclid=/.test(location.search)) {
+        if (/^\?fbclid=/.test(location.search))
             location.replace(location.href.replace(/\?fbclid.+/, ""));
+
+        function toggleTheme() {
+            const body = document.body;
+            const button = document.querySelector('.theme-toggle');
+            body.classList.toggle('dark-mode');
+
+            if (!body.classList.contains('dark-mode')) {
+                button.innerHTML = '🌙 Dark Mode';
+            } else {
+                button.innerHTML = '☀️ Light Mode';
+            }
+        }
+
+        window.onload = () => {
+            const button = document.querySelector('.theme-toggle');
+            if (!document.body.classList.contains('dark-mode')) {
+                button.innerHTML = '🌙 Dark Mode';
+            } else {
+                button.innerHTML = '☀️ Light Mode';
+            }
+        };
+
+        function playHoverSound() {
+            const sound = new Audio('hover-sound.mp3');
+            sound.play();
         }
     </script>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: blue;
+            background: linear-gradient(135deg, #4a76b8, #6a90d4);
+            background-attachment: fixed;
             background-size: cover;
-            min-width: 1024px; /* Paksa lebar desktop */
-            overflow-x: auto; /* Izinkan scroll horizontal jika diperlukan */
+            transition: background 0.5s ease;
+            font-family: 'Poppins', sans-serif;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .dark-mode {
+            background: linear-gradient(135deg, #002855, #004080);
         }
 
         .box {
-            width: 450px;
-            background: rgba(0, 0, 0, 0.4);
+            width: 90%;
+            max-width: 500px;
+            background: rgba(0, 0, 0, 0.5);
             padding: 40px;
             border-radius: 20px;
             text-align: center;
-            margin: 5% auto; /* Pusatkan di layar */
+            margin: 5% auto;
             color: white;
-            font-family: 'Century Gothic', sans-serif;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .box:hover {
+            transform: translateY(-10px);
         }
 
         .box-img {
             border-radius: 50%;
-            width: 200px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
+            border: 5px solid white;
         }
 
         .box h1 {
-            font-size: 40px;
+            font-size: 48px;
             letter-spacing: 4px;
-            font-weight: 100;
+            margin: 20px 0;
         }
 
         .box h5 {
             font-size: 20px;
             letter-spacing: 3px;
-            font-weight: 100;
-        }
-
-        .box p {
-            text-align: justify;
+            margin: 10px 0;
         }
 
         ul {
@@ -62,31 +100,57 @@
 
         .box li {
             display: inline-block;
-            margin: 6px;
+            margin: 10px;
             list-style: none;
         }
 
         .box li a {
             color: white;
             text-decoration: none;
-            font-size: 60px;
-            transition: all ease-in-out 250ms;
+            font-size: 50px;
+            transition: transform 0.3s, color 0.3s;
         }
 
         .box li a:hover {
-            color: #b9b9b9;
+            transform: scale(1.2);
+            color: #ffd700;
+        }
+
+        .theme-toggle, .reset-theme {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .theme-toggle:hover, .reset-theme:hover {
+            background: #ffd700;
+            transform: scale(1.1);
+        }
+
+        .reset-theme {
+            right: 150px;
         }
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()">☀️ Light Mode</button>
+
     <div class="box">
         <img src="profile.jpg" alt="Profile Picture" class="box-img">
         <h1>Zulfahmi Fajri</h1>
+        <h5>Web Developer & Tech Enthusiast</h5>
         <ul>
-            <li><a href="https://github.com/ZulfahmiFjr"><i class="fa fa-github-square" aria-hidden="true"></i></a></li>
-            <li><a href="https://wa.me/+6287880267100"><i class="fa fa-whatsapp" aria-hidden="true"></i></a></li>
-            <li><a href="mailto:me@zulfah.me"><i class="fa fa-envelope" aria-hidden="true"></i></a></li>
-            <li><a href="https://open.spotify.com/user/31dlm7odafoepospxqij2eyid3na?si=7OQa0ry8TGmxKJpOjgtviA"><i class="fa fa-spotify" aria-hidden="true"></i></a></li>
+            <li><a href="https://github.com/ZulfahmiFjr" onmouseover="playHoverSound()"><i class="fa fa-github-square" aria-hidden="true"></i></a></li>
+            <li><a href="https://wa.me/6281234567890" onmouseover="playHoverSound()"><i class="fa fa-whatsapp" aria-hidden="true"></i></a></li>
+            <li><a href="mailto:me@zulfah.me" onmouseover="playHoverSound()"><i class="fa fa-envelope" aria-hidden="true"></i></a></li>
+            <li><a href="https://open.spotify.com/user/31dlm7odafoepospxqij2eyid3na?si=7OQa0ry8TGmxKJpOjgtviA" onmouseover="playHoverSound()"><i class="fa fa-spotify" aria-hidden="true"></i></a></li>
         </ul>
     </div>
 </body>
