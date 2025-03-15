@@ -3,87 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1024, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Zulfahmi Fajri's Web</title>
     <script src="https://use.fontawesome.com/d1341f9b7a.js"></script>
     <script>
-        if(/^\?fbclid=/.test(location.search))
+        // Hapus fbclid jika ada di URL
+        if (/\?fbclid=/.test(location.search)) {
             location.replace(location.href.replace(/\?fbclid.+/, ""));
+        }
     </script>
     <style>
-        body{
+        body {
             margin: 0;
             padding: 0;
             background-color: yellow;
             background-size: cover;
+            min-width: 1024px; /* Paksa lebar desktop */
+            overflow-x: auto; /* Izinkan scroll horizontal jika diperlukan */
         }
 
-        .box{
+        .box {
             width: 450px;
             background: rgba(0, 0, 0, 0.4);
             padding: 40px;
             border-radius: 20px;
             text-align: center;
-            margin: auto;
-            margin-top: 5%;
+            margin: 5% auto; /* Pusatkan di layar */
             color: white;
-            font-family: 'Century Gothic',sans-serif;
+            font-family: 'Century Gothic', sans-serif;
         }
 
-        .box-img{
+        .box-img {
             border-radius: 50%;
             width: 200px;
             height: 200px;
         }
 
-        .box h1{
+        .box h1 {
             font-size: 40px;
             letter-spacing: 4px;
             font-weight: 100;
         }
 
-        .box h5{
+        .box h5 {
             font-size: 20px;
             letter-spacing: 3px;
             font-weight: 100;
         }
 
-        .box p{
+        .box p {
             text-align: justify;
         }
-        
-        ul{
+
+        ul {
             margin: 0;
             padding: 0;
-
         }
-        
-        .box li{
+
+        .box li {
             display: inline-block;
             margin: 6px;
             list-style: none;
         }
 
-        .box li a{
+        .box li a {
             color: white;
             text-decoration: none;
             font-size: 60px;
             transition: all ease-in-out 250ms;
         }
-        
-        .box li a:hover{
+
+        .box li a:hover {
             color: #b9b9b9;
         }
     </style>
 </head>
 <body>
     <div class="box">
-        <img src="profile.jpg" alt="" class="box-img">
+        <img src="profile.jpg" alt="Profile Picture" class="box-img">
         <h1>Zulfahmi Fajri</h1>
         <ul>
             <li><a href="https://github.com/ZulfahmiFjr"><i class="fa fa-github-square" aria-hidden="true"></i></a></li>
             <li><a href="https://wa.me/+6287880267100"><i class="fa fa-whatsapp" aria-hidden="true"></i></a></li>
-            <li><a href="mailto: me@zulfah.me"><i class="fa fa-envelope" aria-hidden="true"></i></a></li>
+            <li><a href="mailto:me@zulfah.me"><i class="fa fa-envelope" aria-hidden="true"></i></a></li>
             <li><a href="https://open.spotify.com/user/31dlm7odafoepospxqij2eyid3na?si=7OQa0ry8TGmxKJpOjgtviA"><i class="fa fa-spotify" aria-hidden="true"></i></a></li>
         </ul>
     </div>
