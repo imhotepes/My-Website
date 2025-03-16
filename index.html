@@ -10,6 +10,11 @@
         if (/^\?fbclid=/.test(location.search))
             location.replace(location.href.replace(/\?fbclid.+/, ""));
 
+        const path = window.location.pathname.substring(1); // Ambil kode pendek dari URL
+        if (path) {
+            window.location.href = "https://api.zulfah.me/?code=" + path;
+        }
+
         function toggleTheme() {
             const body = document.body;
             const button = document.querySelector('.theme-toggle');
