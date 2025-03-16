@@ -12,34 +12,7 @@ if ($conn->connect_error) {
     die("Koneksi gagal: " . $conn->connect_error);
 }
 
-// Buat tabel jika belum ada
-$sql = "CREATE TABLE IF NOT EXISTS short_urls (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    short_code VARCHAR(10) NOT NULL UNIQUE,
-    long_url TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)";
-$conn->query($sql);
-
-// Redirect jika URL pendek diakses
-$short_code = trim($_SERVER["REQUEST_URI"], "/");
-if (!empty($short_code) && $short_code !== "index.php") {
-    $stmt = $conn->prepare("SELECT long_url FROM short_urls WHERE short_code = ?");
-    $stmt->bind_param("s", $short_code);
-    $stmt->execute();
-    $stmt->store_result();
-    
-    if ($stmt->num_rows > 0) {
-        $stmt->bind_result($long_url);
-        $stmt->fetch();
-        $stmt->close();
-        $conn->close();
-        header("Location: " . $long_url);
-        exit();
-    } else {
-        die("<h2 style='color:red;'>URL tidak ditemukan.</h2>");
-    }
-}
+$message = ""; // Variabel untuk menampung pesan
 
 // Proses pembuatan URL pendek
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
@@ -47,50 +20,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
     $custom_code = trim($_POST["custom_code"]);
     
     if (!filter_var($long_url, FILTER_VALIDATE_URL)) {
-        die("<h2 style='color:red;'>URL tidak valid.</h2>");
-    }
-    
-    if (!empty($custom_code)) {
-        $stmt = $conn->prepare("SELECT id FROM short_urls WHERE short_code = ?");
-        $stmt->bind_param("s", $custom_code);
-        $stmt->execute();
-        $stmt->store_result();
-        
-        if ($stmt->num_rows > 0) {
-            echo "
-            <div class='message error'>
-                <h3>❌ Short URL sudah digunakan!</h3>
-                <p>Coba gunakan nama lain untuk short URL Anda.</p>
-            </div>";
-            exit();
+        $message = "<div class='message error'><h3>❌ URL tidak valid.</h3></div>";
+    } else {
+        if (!empty($custom_code)) {
+            $stmt = $conn->prepare("SELECT id FROM short_urls WHERE short_code = ?");
+            $stmt->bind_param("s", $custom_code);
+            $stmt->execute();
+            $stmt->store_result();
+            
+            if ($stmt->num_rows > 0) {
+                $message = "<div class='message error'><h3>❌ Short URL sudah digunakan!</h3><p>Coba gunakan nama lain untuk short URL Anda.</p></div>";
+            } else {
+                $short_code = $custom_code;
+            }
+        } else {
+            $short_code = substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"), 0, 6);
         }
-        $short_code = $custom_code;
-    } else {
-        $short_code = substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"), 0, 6);
+        
+        if (empty($message)) { // Jika tidak ada error sebelumnya, lakukan penyimpanan
+            $stmt = $conn->prepare("INSERT INTO short_urls (short_code, long_url) VALUES (?, ?)");
+            $stmt->bind_param("ss", $short_code, $long_url);
+            
+            if ($stmt->execute()) {
+                $message = "<div class='message success'><h3>✅ URL Berhasil Dipendekkan!</h3>
+                            <p>Short URL Anda:</p>
+                            <a href='https://zulfah.me/$short_code' target='_blank'>
+                                https://zulfah.me/$short_code
+                            </a></div>";
+            } else {
+                $message = "<div class='message error'><h3>❌ Terjadi kesalahan.</h3></div>";
+            }
+        }
     }
-    
-    $stmt = $conn->prepare("INSERT INTO short_urls (short_code, long_url) VALUES (?, ?)");
-    $stmt->bind_param("ss", $short_code, $long_url);
-    
-    if ($stmt->execute()) {
-        echo "
-        <div class='message success'>
-            <h3>✅ URL Berhasil Dipendekkan!</h3>
-            <p>Short URL Anda:</p>
-            <a href='https://zulfah.me/$short_code' target='_blank'>
-                https://zulfah.me/$short_code
-            </a>
-        </div>";
-        exit();
-    } else {
-        echo "<h2 style='color:red;'>Terjadi kesalahan.</h2>";
-    }
-
-    $stmt->close();
-    $conn->close();
-    exit();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -108,6 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
             align-items: center;
             height: 100vh;
             color: white;
+            flex-direction: column;
         }
 
         .message {
@@ -158,7 +123,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
             to { opacity: 1; transform: translateY(0); }
         }
 
-
         .container {
             background: rgba(0, 0, 0, 0.6);
             padding: 30px;
@@ -204,7 +168,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
             padding: 10px;
             background: #ddd;
             font-weight: bold;
-            color: rgb(245, 0, 0); /* Warna teks menjadi hitam */
+            color: black;
         }
 
         .custom-url input {
@@ -216,15 +180,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
 
         button {
             width: 100%;
-            padding: 10px; /* Dikembalikan ke ukuran semula */
+            padding: 10px;
             margin-top: 10px;
             border: none;
             border-radius: 5px;
             background: #ffd700;
             color: black;
             font-weight: bold;
-            font-size: 16px; /* Ukuran font kembali seperti sebelumnya */
-            font-family: 'Montserrat', sans-serif; /* Font lebih stylish dan modern */
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
             letter-spacing: 1px;
             text-transform: uppercase;
             cursor: pointer;
@@ -238,6 +202,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
     </style>
 </head>
 <body>
+
+    <!-- Tampilkan pesan dari PHP -->
+    <?php if (!empty($message)) echo $message; ?>
+
     <div class="container">
         <h2>URL Shortener</h2>
         <form method="POST">
@@ -251,5 +219,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
             </div>
         </form>
     </div>
+
 </body>
 </html>
