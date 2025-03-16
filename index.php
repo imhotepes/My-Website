@@ -244,6 +244,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
             background: #ffcc00;
             transform: scale(1.05);
         }
+
+        .container + .message {
+            margin-top: 20px; /* Memberi jarak antara form dan pesan */
+        }
     </style>
 </head>
 <body>
