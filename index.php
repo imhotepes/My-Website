@@ -12,7 +12,7 @@ if ($conn->connect_error) {
     die("Koneksi gagal: " . $conn->connect_error);
 }
 
-// **1️⃣ Jika pertama kali diakses, buat tabel**
+// Buat tabel jika belum ada
 $sql = "CREATE TABLE IF NOT EXISTS short_urls (
     id INT AUTO_INCREMENT PRIMARY KEY,
     short_code VARCHAR(10) NOT NULL UNIQUE,
@@ -21,7 +21,7 @@ $sql = "CREATE TABLE IF NOT EXISTS short_urls (
 )";
 $conn->query($sql);
 
-// **2️⃣ Jika URL pendek diakses, redirect ke URL panjang**
+// Redirect jika URL pendek diakses
 $short_code = trim($_SERVER["REQUEST_URI"], "/");
 if (!empty($short_code) && $short_code !== "index.php") {
     $stmt = $conn->prepare("SELECT long_url FROM short_urls WHERE short_code = ?");
@@ -37,49 +37,61 @@ if (!empty($short_code) && $short_code !== "index.php") {
         header("Location: " . $long_url);
         exit();
     } else {
-        die("URL tidak ditemukan.");
+        die("<h2 style='color:red;'>URL tidak ditemukan.</h2>");
     }
 }
 
-// **3️⃣ Jika ada request POST, buat URL pendek**
+// Proses pembuatan URL pendek
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
     $long_url = trim($_POST["long_url"]);
-
-    // Validasi URL
+    $custom_code = trim($_POST["custom_code"]);
+    
     if (!filter_var($long_url, FILTER_VALIDATE_URL)) {
-        die("URL tidak valid.");
+        die("<h2 style='color:red;'>URL tidak valid.</h2>");
     }
-
-    // Generate kode pendek
-    $short_code = substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"), 0, 6);
-
-    // Simpan ke database
+    
+    if (!empty($custom_code)) {
+        $stmt = $conn->prepare("SELECT id FROM short_urls WHERE short_code = ?");
+        $stmt->bind_param("s", $custom_code);
+        $stmt->execute();
+        $stmt->store_result();
+        
+        if ($stmt->num_rows > 0) {
+            die("<h2 style='color:red;'>Short URL sudah digunakan, coba yang lain.</h2>");
+        }
+        $short_code = $custom_code;
+    } else {
+        $short_code = substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"), 0, 6);
+    }
+    
     $stmt = $conn->prepare("INSERT INTO short_urls (short_code, long_url) VALUES (?, ?)");
     $stmt->bind_param("ss", $short_code, $long_url);
-
+    
     if ($stmt->execute()) {
-        echo "URL pendek Anda: <a href='https://zulfah.me/$short_code'>https://zulfah.me/$short_code</a>";
+        echo "<h2>URL pendek Anda: <a href='https://zulfah.me/$short_code'>https://zulfah.me/$short_code</a></h2>";
     } else {
-        echo "Terjadi kesalahan.";
+        echo "<h2 style='color:red;'>Terjadi kesalahan.</h2>";
     }
 
     $stmt->close();
     $conn->close();
     exit();
 }
-
-// **4️⃣ Jika tidak ada request, tampilkan form input**
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>URL Shortener</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body>
-    <h2>URL Shortener</h2>
-    <form method="POST">
-        <input type="text" name="long_url" placeholder="Masukkan URL" required>
-        <button type="submit">Shorten</button>
+<body class="container text-center mt-5">
+    <h2 class="mb-4">URL Shortener</h2>
+    <form method="POST" class="w-50 mx-auto">
+        <input type="text" name="long_url" class="form-control mb-2" placeholder="Masukkan URL" required>
+        <input type="text" name="custom_code" class="form-control mb-2" placeholder="Custom short URL (opsional)">
+        <button type="submit" class="btn btn-primary">Shorten</button>
     </form>
 </body>
 </html>

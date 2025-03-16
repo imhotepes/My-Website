@@ -1,41 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
-  <title>URL Shortener</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-
-<body>
-  <h1>URL Shortener</h1>
-  <form id="shortenForm">
-    <input type="text" id="longUrl" placeholder="Masukkan URL panjang" required>
-    <button type="submit">Shorten</button>
-  </form>
-
-  <script>
-    // Ambil token dari variabel lingkungan yang diekspor di WSL
-    const token = `${process.env.GITHUB_TOKEN}`;
-
-    document.getElementById('shortenForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const longUrl = document.getElementById('longUrl').value;
-
-      const response = await fetch('https://api.github.com/repos/ZulfahmiFajri/My-Website/shorten', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url: longUrl })
-      });
-
-      if (response.ok) {
-        alert('URL berhasil dipersingkat!');
-      } else {
-        alert('Gagal mempersingkat URL.');
-      }
-    });
-  </script>
+<body class="container text-center mt-5">
+    <h2 class="mb-4">URL Shortener</h2>
+    <form method="POST" class="w-50 mx-auto">
+        <input type="text" name="long_url" class="form-control mb-2" placeholder="Masukkan URL" required>
+        <input type="text" name="custom_code" class="form-control mb-2" placeholder="Custom short URL (opsional)">
+        <button type="submit" class="btn btn-primary">Shorten</button>
+    </form>
 </body>
-
 </html>
