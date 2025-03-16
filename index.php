@@ -203,9 +203,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
 </head>
 <body>
 
-    <!-- Tampilkan pesan dari PHP -->
-    <?php if (!empty($message)) echo $message; ?>
-
+    
     <div class="container">
         <h2>URL Shortener</h2>
         <form method="POST">
@@ -219,6 +217,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
             </div>
         </form>
     </div>
-
+    
+    <!-- Tampilkan pesan dari PHP -->
+    <?php if (!empty($message)) echo $message; ?>
+    
 </body>
 </html>
