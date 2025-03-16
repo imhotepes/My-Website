@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
         $stmt->store_result();
         
         if ($stmt->num_rows > 0) {
-            die("<h2 style='color:red;'>Short URL sudah digunakan, coba yang lain.</h2>");
+            $message = "<div class='message error'><h3>❌ Short URL sudah digunakan!</h3><p>Coba gunakan nama lain untuk short URL Anda.</p></div>";
         }
         $short_code = $custom_code;
     } else {
@@ -68,9 +68,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
     $stmt->bind_param("ss", $short_code, $long_url);
     
     if ($stmt->execute()) {
-        echo "<h2>URL pendek Anda: <a href='https://zulfah.me/$short_code'>https://zulfah.me/$short_code</a></h2>";
+        $message = "<div class='message success'><h3>✅ URL Berhasil Dipendekkan!</h3>
+                    <p>Short URL Anda:</p>
+                    <a href='https://zulfah.me/$short_code' target='_blank'>
+                        https://zulfah.me/$short_code
+                    </a></div>";
     } else {
-        echo "<h2 style='color:red;'>Terjadi kesalahan.</h2>";
+        $message = "<div class='message error'><h3>❌ Terjadi kesalahan.</h3></div>";
     }
 
     $stmt->close();
@@ -95,6 +99,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
             align-items: center;
             height: 100vh;
             color: white;
+        }
+
+        .message {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .error {
+            background: #FF4D4D;
+            color: white;
+        }
+
+        .message h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .message a {
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 5px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .message a:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .container {
@@ -189,5 +241,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
             </div>
         </form>
     </div>
+    <?php if (!empty($message)) echo $message; ?>
 </body>
 </html>
