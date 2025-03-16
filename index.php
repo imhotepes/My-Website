@@ -84,14 +84,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>URL Shortener</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #4a76b8, #6a90d4);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        input {
+            background: white;
+            color: black;
+        }
+
+        button {
+            background: #ffd700;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #ffcc00;
+        }
+    </style>
 </head>
-<body class="container text-center mt-5">
-    <h2 class="mb-4">URL Shortener</h2>
-    <form method="POST" class="w-50 mx-auto">
-        <input type="text" name="long_url" class="form-control mb-2" placeholder="Masukkan URL" required>
-        <input type="text" name="custom_code" class="form-control mb-2" placeholder="Custom short URL (opsional)">
-        <button type="submit" class="btn btn-primary">Shorten</button>
-    </form>
+<body>
+    <div class="container">
+        <h2>URL Shortener</h2>
+        <form method="POST">
+            <input type="text" name="long_url" placeholder="Masukkan URL" required>
+            <input type="text" name="custom_code" placeholder="Custom short URL (opsional)">
+            <button type="submit">Shorten</button>
+        </form>
+    </div>
 </body>
 </html>
