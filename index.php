@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
     $stmt->bind_param("ss", $short_code, $long_url);
 
     if ($stmt->execute()) {
-        echo "URL pendek Anda: <a href='https://api.zulfah.me/$short_code'>https://api.zulfah.me/$short_code</a>";
+        echo "URL pendek Anda: <a href='https://zulfah.me/$short_code'>https://zulfah.me/$short_code</a>";
     } else {
         echo "Terjadi kesalahan.";
     }
