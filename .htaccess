@@ -1,4 +1,5 @@
-RewriteEngine on
-<if "%{QUERY_STRING} =~ /^fbclid=/">
- RewriteRule  .  %{REQUEST_URI}?   [R=301,L]
-</if>
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
