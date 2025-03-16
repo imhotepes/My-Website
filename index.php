@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
         $stmt->store_result();
         
         if ($stmt->num_rows > 0) {
-            $message = "<div class='message error'><h3>❌ Short URL sudah digunakan!</h3><p>Coba gunakan nama lain untuk short URL Anda.</p></div>";
+            die("<h2 style='color:red;'>Short URL sudah digunakan, coba yang lain.</h2>");
         }
         $short_code = $custom_code;
     } else {
@@ -68,13 +68,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
     $stmt->bind_param("ss", $short_code, $long_url);
     
     if ($stmt->execute()) {
-        $message = "<div class='message success'><h3>✅ URL Berhasil Dipendekkan!</h3>
-                    <p>Short URL Anda:</p>
-                    <a href='https://zulfah.me/$short_code' target='_blank'>
-                        https://zulfah.me/$short_code
-                    </a></div>";
+        echo "<h2>URL pendek Anda: <a href='https://zulfah.me/$short_code'>https://zulfah.me/$short_code</a></h2>";
     } else {
-        $message = "<div class='message error'><h3>❌ Terjadi kesalahan.</h3></div>";
+        echo "<h2 style='color:red;'>Terjadi kesalahan.</h2>";
     }
 
     $stmt->close();
