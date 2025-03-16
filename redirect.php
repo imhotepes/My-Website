@@ -1,15 +1,12 @@
 <?php
-// Konfigurasi koneksi ke database Railway
+// Koneksi ke database
 $host = getenv("RAILWAY_TCP_PROXY_DOMAIN");
 $port = getenv("RAILWAY_TCP_PROXY_PORT");
 $username = getenv("MYSQLUSER");
 $password = getenv("MYSQLPASSWORD");
 $database = getenv("MYSQLDATABASE");
 
-// Koneksi ke database
 $conn = new mysqli($host, $username, $password, $database, $port);
-
-// Periksa koneksi
 if ($conn->connect_error) {
     die("Koneksi gagal: " . $conn->connect_error);
 }
@@ -17,9 +14,9 @@ if ($conn->connect_error) {
 // Ambil kode dari URL
 $code = isset($_GET['code']) ? trim($_GET['code']) : '';
 
-// Validasi kode pendek agar tidak salah membaca
-if (empty($code) || $code === "redirect.php") {
-    die("Kode tidak valid atau tidak ditemukan.");
+// **Pastikan kode tidak kosong atau mengandung 'redirect.php'**
+if (empty($code) || strpos($code, 'redirect.php') !== false) {
+    die("Error: Kode pendek tidak valid.");
 }
 
 // Cek apakah kode ada di database
@@ -28,12 +25,13 @@ $stmt->bind_param("s", $code);
 $stmt->execute();
 $result = $stmt->get_result();
 
+// Jika kode ditemukan, redirect ke long_url
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
     $long_url = $row['long_url'];
 
-    // Pastikan tidak mengarahkan ke dirinya sendiri
-    if ($long_url === "https://api.zulfah.me/redirect.php") {
+    // **Cegah redirect loop (pastikan URL tujuan bukan `redirect.php`)**
+    if (strpos($long_url, 'redirect.php') !== false) {
         die("Error: Redirect loop terdeteksi.");
     }
 
@@ -41,7 +39,7 @@ if ($result->num_rows > 0) {
     header("Location: $long_url", true, 301);
     exit();
 } else {
-    die("URL tidak ditemukan.");
+    die("Error: Kode tidak ditemukan.");
 }
 
 $stmt->close();
