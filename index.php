@@ -103,34 +103,75 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
             border-radius: 15px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
         }
 
         h2 {
             margin-bottom: 20px;
         }
 
-        input, button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 5px;
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
             background: white;
             color: black;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .custom-url {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .custom-url span {
+            padding: 10px;
+            background: #ddd;
+            font-weight: bold;
+            color: rgb(245, 0, 0); /* Warna teks menjadi hitam */
+        }
+
+        .custom-url input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding-left: 5px;
         }
 
         button {
+            width: 100%;
+            padding: 10px; /* Dikembalikan ke ukuran semula */
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
             background: #ffd700;
             color: black;
             font-weight: bold;
+            font-size: 16px; /* Ukuran font kembali seperti sebelumnya */
+            font-family: 'Montserrat', sans-serif; /* Font lebih stylish dan modern */
+            letter-spacing: 1px;
+            text-transform: uppercase;
             cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
         }
 
         button:hover {
             background: #ffcc00;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -138,9 +179,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
     <div class="container">
         <h2>URL Shortener</h2>
         <form method="POST">
-            <input type="text" name="long_url" placeholder="Masukkan URL" required>
-            <input type="text" name="custom_code" placeholder="Custom short URL (opsional)">
-            <button type="submit">Shorten</button>
+            <div class="input-group">
+                <input type="text" name="long_url" placeholder="Masukkan URL" required>
+                <div class="custom-url">
+                    <span>https://zulfah.me/</span>
+                    <input type="text" name="custom_code" placeholder="Alias (opsional)">
+                </div>
+                <button type="submit">Shorten</button>
+            </div>
         </form>
     </div>
 </body>
