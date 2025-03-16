@@ -109,7 +109,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
     <title>URL Shortener</title>
     <style>
         body {
-            margin: 0;
             padding: 0;
             background: linear-gradient(135deg, #4a76b8, #6a90d4);
             font-family: 'Poppins', sans-serif;
@@ -117,19 +116,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin-bottom: 20px;
             color: white;
-            flex-direction: column; /* Menambahkan flex-direction column untuk menumpuk elemen secara vertikal */
-        }
-
-        .container {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 400px;
-            margin-bottom: 20px; /* Menambah jarak bawah pada kontainer */
+            flex-direction: column;
         }
 
         .message {
@@ -180,17 +169,72 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
             to { opacity: 1; transform: translateY(0); }
         }
 
+        .container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: white;
+            color: black;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .custom-url {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .custom-url span {
+            padding: 10px;
+            background: #ddd;
+            font-weight: bold;
+            color: rgb(245, 0, 0); /* Warna teks menjadi hitam */
+        }
+
+        .custom-url input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding-left: 5px;
+        }
+
         button {
             width: 100%;
-            padding: 10px;
+            padding: 10px; /* Dikembalikan ke ukuran semula */
             margin-top: 10px;
             border: none;
             border-radius: 5px;
             background: #ffd700;
             color: black;
             font-weight: bold;
-            font-size: 16px;
-            font-family: 'Montserrat', sans-serif;
+            font-size: 16px; /* Ukuran font kembali seperti sebelumnya */
+            font-family: 'Montserrat', sans-serif; /* Font lebih stylish dan modern */
             letter-spacing: 1px;
             text-transform: uppercase;
             cursor: pointer;
@@ -202,6 +246,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["long_url"])) {
             transform: scale(1.05);
         }
 
+        .container + .message {
+            margin-top: 20px; /* Memberi jarak antara form dan pesan */
+        }
     </style>
 </head>
 <body>
