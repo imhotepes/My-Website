@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="refresh" content="0; url=https://url.zulfah.me">
-    <script>
-        var path = window.location.pathname.substring(1); // Ambil path setelah zulfah.me/
-        if (path) {
-            window.location.href = "https://url.zulfah.me/" + path;
-        }
-    </script>
+  <meta http-equiv="refresh" content="0; url=https://url.zulfah.me">
+  <script>
+    var path = window.location.pathname;
+    // Periksa apakah path tidak kosong dan tidak dimulai dengan '/pmmp'
+    if(path && path !== '/' && !path.startsWith('/pmmp')){
+      var trimmedPath = path.replace(/^\/+/, '');
+      window.location.href = "https://url.zulfah.me/" + trimmedPath;
+    }
+  </script>
 </head>
 <body>
-    <p>Redirecting to <a href="https://url.zulfah.me">url.zulfah.me</a>...</p>
+  <p>Redirecting to <a href="https://url.zulfah.me">url.zulfah.me</a>...</p>
 </body>
 </html>
